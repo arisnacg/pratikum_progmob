@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.Login"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="60dp"
+            android:paddingRight="40dp"
+            android:paddingLeft="40dp">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/logo"
+                android:layout_marginBottom="40dp"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/email"
+                android:background="@drawable/edittext_bg_rounded"
+                android:hint="xxxxxx@email.com"
+                android:textColor="#344753"
+                android:padding="15dp"
+                android:inputType="textEmailAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/password"
+                android:background="@drawable/edittext_bg_rounded"
+                android:padding="15dp"
+                android:textColor="#344753"
+                android:layout_marginTop="10dp"
+                android:hint="******************"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/btn_login"
+                android:background="@drawable/btn_rounded"
+                android:textColor="#fff"
+                android:layout_marginTop="40dp"
+                android:text="Login"
+                android:textStyle="bold"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:textSize="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/link_regis"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="Belum punya akun? Daftar disini"/>
+        </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

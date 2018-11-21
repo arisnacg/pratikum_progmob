@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_edit_profil"
+        android:icon="@drawable/ic_settings"
+        android:title="Edit Profile"
+        app:showAsAction="always"></item>
+    <item android:id="@+id/menu_ganti_password"
+        android:icon="@drawable/ic_vpn_key"
+        android:title="Ganti Password"
+        ></item>
+    <item android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_power"
+        android:title="Log Out"></item>
+</menu>
