@@ -19,11 +19,6 @@ public class User{
 	@SerializedName("email")
 	private String email;
 
-	public User(String nama, String email ) {
-		this.nama = nama;
-		this.email = email;
-	}
-
 	public void setNama(String nama){
 		this.nama = nama;
 	}

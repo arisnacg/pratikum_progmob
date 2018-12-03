@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/postingan_coordinator_layout"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:background="#ebf2f5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/postingan_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+        </android.support.v7.widget.RecyclerView>
 
-</LinearLayout>
+    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:id="@+id/btn_tambah_post"
+        android:src="@drawable/ic_pencil"
+        android:layout_margin="16dp"/>
+</android.support.design.widget.CoordinatorLayout>

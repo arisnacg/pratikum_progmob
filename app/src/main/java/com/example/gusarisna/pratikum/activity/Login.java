@@ -105,8 +105,8 @@ public class Login extends AppCompatActivity {
 
     public void loginBerhasil(AuthRes res){
         simpanPrefs(res.getUserId(), res.getApiToken());
-        Intent intent = new Intent(this, Home.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, Home.class);
+//        startActivity(intent);
         finish();
     }
 

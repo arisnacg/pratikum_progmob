@@ -60,9 +60,9 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         userPrefs = getSharedPreferences("user", Context.MODE_PRIVATE);
 
-//        if(!cekUser()){
-//            logOutUser();
-//        }
+        if(!cekUser()){
+            logOutUser();
+        }
         setContentView(R.layout.home);
         ButterKnife.bind(this);
 
@@ -121,26 +121,6 @@ public class Home extends AppCompatActivity {
         return true;
     }
 
-    public void getUser(){
-        Toast.makeText(getBaseContext(), "UserID " + userId + " => "+apiToken, Toast.LENGTH_SHORT).show();
-        mAPIService.getUser(userId, apiToken).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful()){
-                    user = response.body();
-                } else {
-                    logOutUser();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(getBaseContext(), "Terjadi kesalahan", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @OnClick(R.id.menu_logout)
     public void btnLogoutClicked(){
         mAPIService.logoutUser("Bearer " + apiToken).enqueue(new Callback<AuthRes>() {
             @Override
@@ -163,7 +143,6 @@ public class Home extends AppCompatActivity {
         simpanPrefs(0, "");
         Intent intent = new Intent(this, Login.class);
         startActivity(intent);
-        finish();
     }
 
     public boolean cekUser(){
@@ -178,4 +157,13 @@ public class Home extends AppCompatActivity {
         editor.putString("apiToken", apiToken);
         editor.apply();
     }
+
+    public String getApiToken(){
+        return apiToken;
+    }
+
+    public User getUser(){
+        return user;
+    }
+
 }

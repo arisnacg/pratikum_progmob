@@ -5,4 +5,5 @@
     <color name="colorPrimaryDarkest">#225779</color>
     <color name="colorSecondary">#27945a</color>
     <color name="white">#fff</color>
+    <color name="colorLiked">#e24646</color>
 </resources>
