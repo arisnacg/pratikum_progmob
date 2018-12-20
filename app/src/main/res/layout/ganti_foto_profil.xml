@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/foto_profil_cl"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.GantiFotoProfil">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:elevation="0dp"
+                app:titleTextColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"></android.support.v7.widget.Toolbar>
+            <LinearLayout
+                android:padding="20dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_fotoprofil"
+                    android:layout_marginTop="30dp"
+                    android:src="@mipmap/ic_user_round"
+                    android:layout_gravity="center"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginBottom="30dp"/>
+                <TextView
+                    android:text="File Gambar :"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:padding="4dp"
+                        android:id="@+id/nama_file"
+                        android:textSize="18sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null" />
+                </android.support.v7.widget.CardView>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:paddingLeft="10dp"
+                        android:drawableLeft="@drawable/ic_attach_file"
+                        android:drawablePadding="-10dp"
+                        android:layout_marginRight="4dp"
+                        android:id="@+id/btn_select"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:background="@color/colorPrimary"
+                        android:text="SELECT"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <Button
+                        android:paddingLeft="10dp"
+                        android:drawableLeft="@drawable/ic_file_upload"
+                        android:drawablePadding="-10dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:id="@+id/btn_upload"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:background="@color/colorSecondary"
+                        android:text="Upload"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

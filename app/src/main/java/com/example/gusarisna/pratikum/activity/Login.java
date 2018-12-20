@@ -17,8 +17,11 @@ import android.widget.Toast;
 import com.example.gusarisna.pratikum.R;
 import com.example.gusarisna.pratikum.data.model.AuthRes;
 import com.example.gusarisna.pratikum.data.model.Coba;
+import com.example.gusarisna.pratikum.data.model.Komentar;
 import com.example.gusarisna.pratikum.data.remote.APIService;
 import com.example.gusarisna.pratikum.data.remote.ApiUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -104,9 +107,15 @@ public class Login extends AppCompatActivity {
     }
 
     public void loginBerhasil(AuthRes res){
-        simpanPrefs(res.getUserId(), res.getApiToken());
-//        Intent intent = new Intent(this, Home.class);
-//        startActivity(intent);
+        SharedPreferences.Editor editor = userPrefs.edit();
+        editor.putInt("userId", res.getUserId());
+        editor.putString("userNama", res.getUserNama());
+        editor.putString("userEmail", res.getUserEmail());
+        editor.putString("userFotoProfil", res.getFotoProfil());
+        editor.putString("apiToken", res.getApiToken());
+        editor.apply();
+        Intent i = new Intent(this, Home.class);
+        startActivity(i);
         finish();
     }
 
@@ -114,13 +123,6 @@ public class Login extends AppCompatActivity {
         int id = userPrefs.getInt("userId", 0);
         String apiToken = userPrefs.getString("apiToken", "");
         return (id == 0)? false : true;
-    }
-
-    public void simpanPrefs(int userId, String apiToken){
-        SharedPreferences.Editor editor = userPrefs.edit();
-        editor.putInt("userId", userId);
-        editor.putString("apiToken", apiToken);
-        editor.apply();
     }
 
     public void tamplikanSnackbar(String msg){

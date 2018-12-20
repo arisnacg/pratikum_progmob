@@ -12,8 +12,10 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.gusarisna.pratikum.R;
+import com.example.gusarisna.pratikum.data.database.DatabaseHelper;
 import com.example.gusarisna.pratikum.data.model.BasicRes;
 import com.example.gusarisna.pratikum.data.model.Postingan;
+import com.example.gusarisna.pratikum.data.model.User;
 import com.example.gusarisna.pratikum.data.remote.APIService;
 import com.example.gusarisna.pratikum.data.remote.ApiUtils;
 
@@ -36,8 +38,9 @@ public class EditPostingan extends AppCompatActivity {
     APIService mAPIService;
     SharedPreferences userPrefs;
     Postingan postingan;
-    int userId;
+    User user;
     String apiToken;
+    DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +50,7 @@ public class EditPostingan extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("Edit Postingan");
 
-        userPrefs = getSharedPreferences("user", Context.MODE_PRIVATE);
-        getUser();
+        setUserAndToken();
 
         mAPIService = ApiUtils.getAPIService();
 
@@ -60,6 +62,7 @@ public class EditPostingan extends AppCompatActivity {
                 getIntent().getStringExtra("POSTINGAN_KONTEN")
         );
         etKonten.setText(postingan.getKonten());
+        db = new DatabaseHelper(this);
     }
 
     @OnClick(R.id.btn_update_post)
@@ -70,7 +73,7 @@ public class EditPostingan extends AppCompatActivity {
         progressDialog.setMessage("Mohon untuk menunggu");
         progressDialog.setCancelable(false);
         //progressDialog.show();
-        String konten = etKonten.getText().toString();
+        final String konten = etKonten.getText().toString();
         mAPIService.updatePostingan("Bearer " + apiToken, postingan.getId(), konten)
                 .enqueue(new Callback<BasicRes>() {
                     @Override
@@ -78,6 +81,8 @@ public class EditPostingan extends AppCompatActivity {
                         //progressDialog.dismiss();
                         if(response.isSuccessful()){
                             if(response.body().isStatus()){
+                                postingan.setKonten(konten);
+                                db.updateKontenPostingan(postingan);
                                 finish();
                             } else {
                                 Snackbar.make(coordinatorLayout, response.body().getPesan(), Snackbar.LENGTH_LONG).show();
@@ -103,9 +108,13 @@ public class EditPostingan extends AppCompatActivity {
                 });
     }
 
-    public boolean getUser(){
-        userId = userPrefs.getInt("userId", 0);
+    public void setUserAndToken(){
+        userPrefs = getSharedPreferences("user", Context.MODE_PRIVATE);
+        user = new User();
+        user.setId(userPrefs.getInt("userId", 0));
+        user.setNama(userPrefs.getString("userNama", ""));
+        user.setEmail(userPrefs.getString("userEmail", ""));
+        user.setFotoProfil(userPrefs.getString("userFotoProfil", ""));
         apiToken = userPrefs.getString("apiToken", "");
-        return (userId == 0)? false : true;
     }
 }

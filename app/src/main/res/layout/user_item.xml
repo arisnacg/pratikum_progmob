@@ -7,7 +7,7 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:src="@mipmap/ic_user_round"
@@ -31,6 +31,19 @@
             android:text="pengguna@example.com"
             android:textSize="14dp"
             android:id="@+id/pengguna_email"/>
-
+    </LinearLayout>
+    <LinearLayout
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent">
+        <ImageButton
+            android:id="@+id/btn_follow"
+            android:layout_gravity="center"
+            android:tint="@color/white"
+            android:src="@drawable/ic_person_add"
+            android:background="@color/colorPrimary"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
     </LinearLayout>
 </LinearLayout>

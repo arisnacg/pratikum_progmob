@@ -35,6 +35,13 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.jakewharton:butterknife:9.0.0-rc1'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation ('net.gotev:uploadservice:2.1') {
+        exclude group: 'com.android.support'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+    }
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

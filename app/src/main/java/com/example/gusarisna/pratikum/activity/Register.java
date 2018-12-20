@@ -2,7 +2,10 @@ package com.example.gusarisna.pratikum.activity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -61,7 +64,7 @@ public class Register extends AppCompatActivity {
 
         mAPIService.sendRegisterReq(nama, email, password, confirmPassword).enqueue(new Callback<AuthRes>() {
             @Override
-            public void onResponse(Call<AuthRes> call, Response<AuthRes> response) {
+            public void onResponse(Call<AuthRes> call, final Response<AuthRes> response) {
                 progressDialog.dismiss();
                 if(response.isSuccessful()){
                     if(response.body().isStatus()){
@@ -72,7 +75,7 @@ public class Register extends AppCompatActivity {
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        linkToLogin();
+                                        registerBerhasil(response.body());
                                     }
                                 });
                         AlertDialog alertDialog = alertBuilder.create();
@@ -114,8 +117,24 @@ public class Register extends AppCompatActivity {
         snackbar.show();
     }
 
+
+
     @OnClick(R.id.link_login)
     public void linkToLogin(){
+        finish();
+    }
+
+    public void registerBerhasil(AuthRes res){
+        SharedPreferences userPrefs = getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = userPrefs.edit();
+        editor.putInt("userId", res.getUserId());
+        editor.putString("userNama", res.getUserNama());
+        editor.putString("userEmail", res.getUserEmail());
+        editor.putString("userFotoProfil", res.getFotoProfil());
+        editor.putString("apiToken", res.getApiToken());
+        editor.apply();
+        Intent i = new Intent(this, Home.class);
+        startActivity(i);
         finish();
     }
 

@@ -1,10 +1,8 @@
 package com.example.gusarisna.pratikum.data.model;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 
-@Generated("com.robohorse.robopojogenerator")
-public class User{
+public class UserFollowed{
 
 	@SerializedName("foto_profil")
 	private String fotoProfil;
@@ -75,7 +73,7 @@ public class User{
 	@Override
  	public String toString(){
 		return 
-			"User{" + 
+			"UserFollowed{" + 
 			"foto_profil = '" + fotoProfil + '\'' + 
 			",nama = '" + nama + '\'' + 
 			",updated_at = '" + updatedAt + '\'' + 

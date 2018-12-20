@@ -4,7 +4,7 @@ import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("com.robohorse.robopojogenerator")
-public class User{
+public class From{
 
 	@SerializedName("foto_profil")
 	private String fotoProfil;
@@ -13,10 +13,10 @@ public class User{
 	private String nama;
 
 	@SerializedName("updated_at")
-	private String updatedAt;
+	private Object updatedAt;
 
 	@SerializedName("created_at")
-	private String createdAt;
+	private Object createdAt;
 
 	@SerializedName("id")
 	private int id;
@@ -40,19 +40,19 @@ public class User{
 		return nama;
 	}
 
-	public void setUpdatedAt(String updatedAt){
+	public void setUpdatedAt(Object updatedAt){
 		this.updatedAt = updatedAt;
 	}
 
-	public String getUpdatedAt(){
+	public Object getUpdatedAt(){
 		return updatedAt;
 	}
 
-	public void setCreatedAt(String createdAt){
+	public void setCreatedAt(Object createdAt){
 		this.createdAt = createdAt;
 	}
 
-	public String getCreatedAt(){
+	public Object getCreatedAt(){
 		return createdAt;
 	}
 
@@ -75,7 +75,7 @@ public class User{
 	@Override
  	public String toString(){
 		return 
-			"User{" + 
+			"From{" + 
 			"foto_profil = '" + fotoProfil + '\'' + 
 			",nama = '" + nama + '\'' + 
 			",updated_at = '" + updatedAt + '\'' + 

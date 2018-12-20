@@ -3,6 +3,7 @@
     package="com.example.gusarisna.pratikum">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -24,7 +25,10 @@
         <activity android:name=".adapter.EditProfile" />
         <activity android:name=".activity.TambahPostingan" />
         <activity android:name=".activity.EditPostingan" />
-        <activity android:name=".activity.EditProfile"></activity>
+        <activity android:name=".activity.EditProfile" />
+        <activity android:name=".activity.TambahKomentar" />
+        <activity android:name=".activity.Pengaturan" />
+        <activity android:name=".activity.GantiFotoProfil"></activity>
     </application>
 
 </manifest>

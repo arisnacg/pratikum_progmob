@@ -3,10 +3,12 @@ package com.example.gusarisna.pratikum.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.gusarisna.pratikum.R;
 import com.example.gusarisna.pratikum.data.model.BasicRes;
+import com.example.gusarisna.pratikum.data.model.User;
 import com.example.gusarisna.pratikum.data.remote.APIService;
 import com.example.gusarisna.pratikum.data.remote.ApiUtils;
 
@@ -35,7 +38,7 @@ public class TambahPostingan extends AppCompatActivity {
 
     APIService mAPIService;
     SharedPreferences userPrefs;
-    int userId;
+    User user;
     String apiToken;
 
     @Override
@@ -45,28 +48,25 @@ public class TambahPostingan extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         setTitle("Postingan Baru");
-
-        userPrefs = getSharedPreferences("user", Context.MODE_PRIVATE);
-        getUser();
-
+        setUserAndToken();
         mAPIService = ApiUtils.getAPIService();
     }
 
     @OnClick(R.id.btn_kirim_post)
     public void btnKirimPostClicked(){
 
-        final ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
+        final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Memproses");
         progressDialog.setMessage("Mohon untuk menunggu");
         progressDialog.setCancelable(false);
-        //progressDialog.show();
+        progressDialog.show();
 
         String konten = kontenPostingan.getText().toString();
 
         mAPIService.postPostingan("Bearer " + apiToken, konten).enqueue(new Callback<BasicRes>() {
             @Override
             public void onResponse(Call<BasicRes> call, Response<BasicRes> response) {
-                //progressDialog.dismiss();
+                progressDialog.dismiss();
                 if(response.isSuccessful()){
                     if(response.body().isStatus()){
                         finish();
@@ -78,7 +78,7 @@ public class TambahPostingan extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<BasicRes> call, Throwable t) {
-                //progressDialog.dismiss();
+                progressDialog.dismiss();
                 Snackbar snackbar = Snackbar.make(
                         coordinatorLayout,
                         "Terjadi kesalahan jaringan",
@@ -94,9 +94,13 @@ public class TambahPostingan extends AppCompatActivity {
         });
     }
 
-    public boolean getUser(){
-        userId = userPrefs.getInt("userId", 0);
+    public void setUserAndToken(){
+        userPrefs = getSharedPreferences("user", Context.MODE_PRIVATE);
+        user = new User();
+        user.setId(userPrefs.getInt("userId", 0));
+        user.setNama(userPrefs.getString("userNama", ""));
+        user.setEmail(userPrefs.getString("userEmail", ""));
+        user.setFotoProfil(userPrefs.getString("userFotoProfil", ""));
         apiToken = userPrefs.getString("apiToken", "");
-        return (userId == 0)? false : true;
     }
 }

@@ -10,6 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,9 +20,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.gusarisna.pratikum.R;
+import com.example.gusarisna.pratikum.activity.Home;
 import com.example.gusarisna.pratikum.activity.TambahPostingan;
 import com.example.gusarisna.pratikum.adapter.PostinganRecycleViewAdapter;
+import com.example.gusarisna.pratikum.data.database.DatabaseHelper;
 import com.example.gusarisna.pratikum.data.model.Postingan;
+import com.example.gusarisna.pratikum.data.model.User;
 import com.example.gusarisna.pratikum.data.remote.APIService;
 import com.example.gusarisna.pratikum.data.remote.ApiUtils;
 
@@ -40,12 +44,15 @@ public class PostinganFragment extends Fragment {
 
     View v;
     RecyclerView mRecyclerView;
+    SwipeRefreshLayout swipeLayout;
     List<Postingan> listPostingan;
     APIService mAPIService;
     CoordinatorLayout coordinatorLayout;
     SharedPreferences userPrefs;
-    int userId;
+    User user;
     String apiToken;
+    DatabaseHelper db;
+    private static final String LOG = "DEVELOP";
 
     @BindView(R.id.btn_tambah_post)
     FloatingActionButton btnTambahPost;
@@ -60,15 +67,26 @@ public class PostinganFragment extends Fragment {
         ButterKnife.bind(this, v);
         coordinatorLayout = (CoordinatorLayout) v.findViewById(R.id.postingan_coordinator_layout);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.postingan_recycle_view);
+        swipeLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeLayout.setRefreshing(true);
+                refreshPostingan();
+            }
+        });
+
         return v;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userPrefs = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
-        cekUser();
+        user = ((Home)getActivity()).getUser();
+        apiToken = ((Home)getActivity()).getApiToken();
         mAPIService = ApiUtils.getAPIService();
+        db = ((Home)getActivity()).getDatabaseHelper();
     }
 
     @Override
@@ -78,30 +96,40 @@ public class PostinganFragment extends Fragment {
     }
 
     public void refreshPostingan(){
+        Log.d(LOG, "Request API Postingan");
         mAPIService.getAllPostingan("Bearer " + apiToken).enqueue(new Callback<List<Postingan>>() {
             @Override
             public void onResponse(Call<List<Postingan>> call, Response<List<Postingan>> response) {
-                listPostingan = Collections.emptyList();
                 if(response.isSuccessful()){
+                    Log.d(LOG, "API Postingan Respone OK");
+                    db.deleteAllPostingan();
+                    db.addMultiPostingaan(response.body());
                     listPostingan = response.body();
+                } else {
+                    Log.d(LOG, "API Postingan Respone NOT OK");
+                    listPostingan = db.getAllPostingan();
                 }
                 tampilkanSemuaPostingan(listPostingan);
-
+                swipeLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<List<Postingan>> call, Throwable t) {
+                Log.d(LOG, "API Postingan Gagal : " + t.getMessage());
                 Snackbar snackbar = Snackbar.make(
                         coordinatorLayout,
                         t.getMessage(),
                         Snackbar.LENGTH_LONG
-                ).setAction("Coba Lagi", new View.OnClickListener() {
+                ).setAction(t.getMessage(), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         refreshPostingan();
                     }
                 });
                 snackbar.show();
+                listPostingan = db.getAllPostingan();
+                tampilkanSemuaPostingan(listPostingan);
+                swipeLayout.setRefreshing(false);
             }
         });
     }
@@ -110,12 +138,6 @@ public class PostinganFragment extends Fragment {
         PostinganRecycleViewAdapter adapter = new PostinganRecycleViewAdapter(getContext(), listPostingan, PostinganFragment.this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(adapter);
-    }
-
-    public boolean cekUser(){
-        userId = userPrefs.getInt("userId", 0);
-        apiToken = userPrefs.getString("apiToken", "");
-        return (userId == 0)? false : true;
     }
 
     @OnClick(R.id.btn_tambah_post)

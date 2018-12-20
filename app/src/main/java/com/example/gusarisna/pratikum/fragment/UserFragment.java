@@ -14,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.gusarisna.pratikum.R;
+import com.example.gusarisna.pratikum.activity.Home;
 import com.example.gusarisna.pratikum.adapter.UserRecycleViewAdapter;
+import com.example.gusarisna.pratikum.data.database.DatabaseHelper;
 import com.example.gusarisna.pratikum.data.model.User;
 import com.example.gusarisna.pratikum.data.remote.APIService;
 import com.example.gusarisna.pratikum.data.remote.ApiUtils;
@@ -34,42 +36,58 @@ public class UserFragment extends Fragment {
     List<User> listUser;
     APIService mAPIService;
     CoordinatorLayout coordinatorLayout;
+    DatabaseHelper db;
+    User user;
+    String apiToken;
+    private static final String LOG = "DEVELOP";
 
-    public UserFragment() {
-    }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.v = inflater.inflate(R.layout.user_fragment, container, false);
         coordinatorLayout = (CoordinatorLayout) v.findViewById(R.id.user_coordinator_layout);
-        mengirimAllUserReq();
         return this.v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mengirimAllUserReq();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAPIService = ApiUtils.getAPIService();
+        db = ((Home)getActivity()).getDatabaseHelper();
+        user = ((Home)getActivity()).getUser();
+        apiToken = ((Home)getActivity()).getApiToken();
     }
 
     public void mengirimAllUserReq(){
-        mAPIService.getAllUser().enqueue(new Callback<List<User>>() {
+        Log.d(LOG, "Request API User");
+        mAPIService.getAllUser("Bearer "+apiToken).enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if(response.isSuccessful()){
+                    Log.d(LOG, "API User OK");
+                    db.deleteAllUser();
+                    db.addMultiUser(response.body());
                     listUser = response.body();
-                    tampilkanSemuaUser(listUser);
                 } else {
-                    tampilkanSemuaUser(Collections.<User>emptyList());
+                    Log.d(LOG, "API User NOT OK");
+                    listUser = db.getAllUser();
                 }
-
+                tampilkanSemuaUser(listUser);
             }
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
+                Log.d(LOG, "API User Gagal");
                 Snackbar snackbar = Snackbar.make(
                         coordinatorLayout,
-                        "Terjadi kesalahan jaringan",
+                        t.getMessage(),
                         Snackbar.LENGTH_LONG
                 ).setAction("Coba Lagi", new View.OnClickListener() {
                     @Override
@@ -78,14 +96,16 @@ public class UserFragment extends Fragment {
                     }
                 });
                 snackbar.show();
-                tampilkanSemuaUser(Collections.<User>emptyList());
+                listUser = db.getAllUser();
+                tampilkanSemuaUser(listUser);
             }
+
         });
     }
 
     public void tampilkanSemuaUser(List<User> listUser){
         mRecyclerView = (RecyclerView) v.findViewById(R.id.user_recycler_view);
-        UserRecycleViewAdapter adapter = new UserRecycleViewAdapter(getContext(), listUser);
+        UserRecycleViewAdapter adapter = new UserRecycleViewAdapter(getContext(), user, listUser);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(adapter);
     }

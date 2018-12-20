@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,9 +19,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import  com.example.gusarisna.pratikum.R;
+import com.example.gusarisna.pratikum.R;
 import com.example.gusarisna.pratikum.activity.EditPostingan;
-import com.example.gusarisna.pratikum.activity.Home;
 import com.example.gusarisna.pratikum.activity.TambahKomentar;
 import com.example.gusarisna.pratikum.data.database.DatabaseHelper;
 import com.example.gusarisna.pratikum.data.model.BasicRes;
@@ -31,6 +29,7 @@ import com.example.gusarisna.pratikum.data.model.Postingan;
 import com.example.gusarisna.pratikum.data.remote.APIService;
 import com.example.gusarisna.pratikum.data.remote.ApiUtils;
 import com.example.gusarisna.pratikum.fragment.PostinganFragment;
+import com.example.gusarisna.pratikum.fragment.ProfileFragment;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -48,39 +47,37 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-public class PostinganRecycleViewAdapter extends RecyclerView.Adapter<PostinganRecycleViewAdapter.PostinganViewHolder> {
+public class UserPostinganRecyclerViewAdapter extends RecyclerView.Adapter<UserPostinganRecyclerViewAdapter.UserPostinganViewHolder>{
 
     Context mContext;
-    PostinganFragment postinganFragment;
-
+    ProfileFragment fragment;
     APIService mAPIService;
     List<Postingan> listPostingan;
     SharedPreferences userPrefs;
-
     int userId;
     String apiToken;
     DatabaseHelper db;
     String BASE_URL_IMAGE;
 
-    public PostinganRecycleViewAdapter(Context context, List<Postingan> listPostingan, PostinganFragment postinganFragment) {
+    public UserPostinganRecyclerViewAdapter(Context context, List<Postingan> listPostingan, ProfileFragment fragment) {
+        this.fragment = fragment;
         this.mContext = context;
         this.listPostingan = listPostingan;
-        this.postinganFragment = postinganFragment;
         BASE_URL_IMAGE = ApiUtils.BASE_URL + "foto_profil/";
     }
 
     @NonNull
     @Override
-    public PostinganViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public UserPostinganViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.postingan_item, viewGroup, false);
-        PostinganViewHolder postinganViewHolder = new PostinganRecycleViewAdapter.PostinganViewHolder(v);
-        return postinganViewHolder;
+        UserPostinganViewHolder viewHolder = new UserPostinganViewHolder(v);
+        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostinganViewHolder postinganViewHolder, int i) {
-        postinganViewHolder.tvNama.setText(listPostingan.get(i).getUser().getNama());
+    public void onBindViewHolder(@NonNull UserPostinganViewHolder userPostinganViewHolder, int i) {
+        Log.d("DEVELOP", "Postingan : "+listPostingan.get(i).getKonten());
+        userPostinganViewHolder.tvNama.setText(listPostingan.get(i).getUser().getNama());
         PrettyTime prettyTime = new PrettyTime(new Locale("id"));
         Date createdAt = null;
         try {
@@ -89,24 +86,22 @@ public class PostinganRecycleViewAdapter extends RecyclerView.Adapter<PostinganR
             e.printStackTrace();
         }
         String waktuPost = prettyTime.format(createdAt);
-        postinganViewHolder.tvWaktu.setText(waktuPost);
-        postinganViewHolder.tvKonten.setText(listPostingan.get(i).getKonten());
-        postinganViewHolder.tvLike.setText(listPostingan.get(i).getLikeCount()+"");
-        postinganViewHolder.tvKomentar.setText(listPostingan.get(i).getKomentarCount()+"");
+        userPostinganViewHolder.tvWaktu.setText(waktuPost);
+        userPostinganViewHolder.tvKonten.setText(listPostingan.get(i).getKonten());
+        userPostinganViewHolder.tvLike.setText(listPostingan.get(i).getLikeCount()+"");
+        userPostinganViewHolder.tvKomentar.setText(listPostingan.get(i).getKomentarCount()+"");
         if(listPostingan.get(i).isLiked())
-            postinganViewHolder.btnLike.setColorFilter(Color.parseColor("#e24646"));
+            userPostinganViewHolder.btnLike.setColorFilter(Color.parseColor("#e24646"));
         if(listPostingan.get(i).getUserId() != userId)
-            postinganViewHolder.menuPostingan.setVisibility(LinearLayout.GONE);
+            userPostinganViewHolder.menuPostingan.setVisibility(LinearLayout.GONE);
         if(!listPostingan.get(i).getUser().getFotoProfil().equals("default.png")){
             String url = BASE_URL_IMAGE + listPostingan.get(i).getUser().getFotoProfil();
             Glide.with(mContext)
                     .load(url)
                     .apply(new RequestOptions()
                             .placeholder(R.mipmap.ic_launcher_round).centerCrop())
-                    .into(postinganViewHolder.ivUser);
+                    .into(userPostinganViewHolder.ivUser);
         }
-
-
     }
 
     @Override
@@ -114,7 +109,17 @@ public class PostinganRecycleViewAdapter extends RecyclerView.Adapter<PostinganR
         return listPostingan.size();
     }
 
-    public class PostinganViewHolder extends RecyclerView.ViewHolder {
+    public Date parseDate(String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd H:mm:ss");
+        return sdf.parse(date);
+    }
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //View Holder
+    public class UserPostinganViewHolder extends RecyclerView.ViewHolder {
+
         @BindView(R.id.postingan_user_nama)
         TextView tvNama;
         @BindView(R.id.postingan_created_at)
@@ -136,14 +141,53 @@ public class PostinganRecycleViewAdapter extends RecyclerView.Adapter<PostinganR
         @BindView(R.id.postingan_user)
         CircleImageView ivUser;
 
-
-        public PostinganViewHolder(@NonNull View itemView) {
+        public UserPostinganViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mAPIService = ApiUtils.getAPIService();
             userPrefs = itemView.getContext().getSharedPreferences("user", Context.MODE_PRIVATE);
             getUser();
             db = new DatabaseHelper(itemView.getContext());
+        }
+
+        @OnClick(R.id.btn_hapus_post)
+        public void hapusPostingan(View v){
+
+            final Context context = v.getContext();
+            final ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.setTitle("Memproses");
+            progressDialog.setMessage("Mohon untuk menunggu");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            mAPIService.hapusPostingan("Bearer " + apiToken, listPostingan.get(getAdapterPosition()).getId())
+                    .enqueue(new Callback<BasicRes>() {
+                        @Override
+                        public void onResponse(Call<BasicRes> call, Response<BasicRes> response) {
+                            if(response.isSuccessful()){
+                                if(response.body().isStatus()){
+                                    Toast.makeText(context, response.body().getPesan(), Toast.LENGTH_SHORT).show();
+                                    db.deletePostingan(listPostingan.get(getAdapterPosition()).getId());
+                                    fragment.refreshUserPostingan();
+                                }
+                            }
+                            progressDialog.dismiss();
+                        }
+
+                        @Override
+                        public void onFailure(Call<BasicRes> call, Throwable t) {
+                            progressDialog.dismiss();
+                            Toast.makeText(context, "Terjadi Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+
+        @OnClick(R.id.btn_edit_post)
+        public void editPostingan(View v){
+            final Context context = v.getContext();
+            Intent i = new Intent(context, EditPostingan.class);
+            i.putExtra("POSTINGAN_ID", listPostingan.get(getAdapterPosition()).getId());
+            i.putExtra("POSTINGAN_KONTEN", listPostingan.get(getAdapterPosition()).getKonten());
+            context.startActivity(i);
         }
 
         @OnClick(R.id.btn_like)
@@ -176,60 +220,17 @@ public class PostinganRecycleViewAdapter extends RecyclerView.Adapter<PostinganR
         @OnClick(R.id.btn_komentar)
         public void btnKomentarClicked(View v){
             Intent i = new Intent(mContext, TambahKomentar.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("POSTINGAN_ID", listPostingan.get(getAdapterPosition()).getId());
             mContext.startActivity(i);
         }
 
-        @OnClick(R.id.btn_hapus_post)
-        public void hapusPostingan(View v){
-
-            final Context context = v.getContext();
-            final ProgressDialog progressDialog = new ProgressDialog(context);
-            progressDialog.setTitle("Memproses");
-            progressDialog.setMessage("Mohon untuk menunggu");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-            mAPIService.hapusPostingan("Bearer " + apiToken, listPostingan.get(getAdapterPosition()).getId())
-                    .enqueue(new Callback<BasicRes>() {
-                        @Override
-                        public void onResponse(Call<BasicRes> call, Response<BasicRes> response) {
-                            if(response.isSuccessful()){
-                                if(response.body().isStatus()){
-                                    Snackbar.make(postinganFragment.getCoordinatorLayout(), response.body().getPesan(), Snackbar.LENGTH_SHORT).show();
-                                    postinganFragment.refreshPostingan();
-                                }
-                            }
-                            progressDialog.dismiss();
-                        }
-
-                        @Override
-                        public void onFailure(Call<BasicRes> call, Throwable t) {
-                            progressDialog.dismiss();
-                            Toast.makeText(context, "Terjadi Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+        public boolean getUser(){
+            userId = userPrefs.getInt("userId", 0);
+            apiToken = userPrefs.getString("apiToken", "");
+            return (userId == 0)? false : true;
         }
 
-        @OnClick(R.id.btn_edit_post)
-        public void editPostingan(View v){
-            final Context context = v.getContext();
-            Intent i = new Intent(context, EditPostingan.class);
-            i.putExtra("POSTINGAN_ID", listPostingan.get(getAdapterPosition()).getId());
-            i.putExtra("POSTINGAN_KONTEN", listPostingan.get(getAdapterPosition()).getKonten());
-            context.startActivity(i);
-        }
-
-    }
-
-    public Date parseDate(String date) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd H:mm:ss");
-        return sdf.parse(date);
-    }
-
-    public boolean getUser(){
-        userId = userPrefs.getInt("userId", 0);
-        apiToken = userPrefs.getString("apiToken", "");
-        return (userId == 0)? false : true;
     }
 
 }
