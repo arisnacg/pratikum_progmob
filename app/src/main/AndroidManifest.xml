@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,6 +28,21 @@
         <activity android:name=".activity.TambahKomentar" />
         <activity android:name=".activity.Pengaturan" />
         <activity android:name=".activity.GantiFotoProfil"></activity>
+
+        <service
+            android:name=".service.CobaService">
+        <intent-filter>
+            <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+        </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.MyFirebaseInstanceService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

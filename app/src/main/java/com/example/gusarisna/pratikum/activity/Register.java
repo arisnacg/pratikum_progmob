@@ -40,6 +40,7 @@ public class Register extends AppCompatActivity {
     CoordinatorLayout coordinatorLayout;
 
     APIService mAPIService;
+    SharedPreferences userPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.register);
         ButterKnife.bind(this);
         mAPIService = ApiUtils.getAPIService();
+        userPrefs = getSharedPreferences("user", Context.MODE_PRIVATE);
     }
 
     @OnClick(R.id.btn_regis)
@@ -55,6 +57,7 @@ public class Register extends AppCompatActivity {
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
         String confirmPassword = etConfirmPassword.getText().toString();
+        final String firebaseToken = userPrefs.getString("firebaseToken", "");
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Memproses");
@@ -62,9 +65,10 @@ public class Register extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        mAPIService.sendRegisterReq(nama, email, password, confirmPassword).enqueue(new Callback<AuthRes>() {
+        mAPIService.sendRegisterReq(nama, email, password, confirmPassword, firebaseToken).enqueue(new Callback<AuthRes>() {
             @Override
             public void onResponse(Call<AuthRes> call, final Response<AuthRes> response) {
+                Toast.makeText(Register.this, firebaseToken, Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
                 if(response.isSuccessful()){
                     if(response.body().isStatus()){
@@ -125,7 +129,6 @@ public class Register extends AppCompatActivity {
     }
 
     public void registerBerhasil(AuthRes res){
-        SharedPreferences userPrefs = getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = userPrefs.edit();
         editor.putInt("userId", res.getUserId());
         editor.putString("userNama", res.getUserNama());

@@ -47,7 +47,6 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         userPrefs = getSharedPreferences("user", Context.MODE_PRIVATE);
         if(cekUser()){
             Intent intent = new Intent(this, Home.class);
@@ -64,6 +63,7 @@ public class Login extends AppCompatActivity {
     public void buttonLoginClicked(){
         String email = loginEmail.getText().toString();
         String password = loginPassword.getText().toString();
+        String firebaseToken = userPrefs.getString("firebaseToken", "");
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Memproses");
@@ -71,7 +71,7 @@ public class Login extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        mAPIService.sendLoginReq(email, password).enqueue(new Callback<AuthRes>() {
+        mAPIService.sendLoginReq(email, password, firebaseToken).enqueue(new Callback<AuthRes>() {
             @Override
             public void onResponse(Call<AuthRes> call, Response<AuthRes> response) {
                 progressDialog.dismiss();

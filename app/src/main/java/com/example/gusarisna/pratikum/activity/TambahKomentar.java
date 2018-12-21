@@ -87,13 +87,11 @@ public class TambahKomentar extends AppCompatActivity {
 
         mAPIService = ApiUtils.getAPIService();
         db = new DatabaseHelper(this);
-        postingan = db.getPostingan(postinganId);
         BASE_URL_IMAGE = ApiUtils.BASE_URL + "foto_profil/";
 
-
+        postingan = db.getPostingan(postinganId);
         userNama.setText(postingan.getUser().getNama());
         postinganKonten.setText(postingan.getKonten());
-        Log.d("DEVELOP", postingan.getUser().getFotoProfil());
         if(!postingan.getUser().getFotoProfil().equals("default.png")){
             String url = BASE_URL_IMAGE + postingan.getUser().getFotoProfil();
             Glide.with(this)
@@ -151,6 +149,10 @@ public class TambahKomentar extends AppCompatActivity {
                 ).show();
             }
         });
+
+        postingan = db.getPostingan(postinganId);
+        userNama.setText(postingan.getUser().getNama());
+        postinganKonten.setText(postingan.getKonten());
     }
 
     public void refreshKomentar(){

@@ -1,9 +1,8 @@
 package com.example.gusarisna.pratikum.data.model;
 
-import javax.annotation.Generated;
+
 import com.google.gson.annotations.SerializedName;
 
-@Generated("com.robohorse.robopojogenerator")
 public class User{
 
 	@SerializedName("foto_profil")
@@ -23,6 +22,9 @@ public class User{
 
 	@SerializedName("email")
 	private String email;
+
+	@SerializedName("followed")
+	private boolean followed;
 
 	public void setFotoProfil(String fotoProfil){
 		this.fotoProfil = fotoProfil;
@@ -72,6 +74,14 @@ public class User{
 		return email;
 	}
 
+	public boolean isFollowed() {
+		return followed;
+	}
+
+	public void setFollowed(boolean followed) {
+		this.followed = followed;
+	}
+
 	@Override
  	public String toString(){
 		return 
@@ -83,5 +93,5 @@ public class User{
 			",id = '" + id + '\'' + 
 			",email = '" + email + '\'' + 
 			"}";
-		}
+	}
 }

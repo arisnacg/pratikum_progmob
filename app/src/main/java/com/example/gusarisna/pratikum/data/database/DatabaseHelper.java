@@ -115,7 +115,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(KEY_UPDATED_AT, user.getUpdatedAt());
             db.insert(TABLE_USER, null, values);
         }
-        Log.d(LOG, "Add User ("+listUser.size()+")");
         db.close();
     }
 
@@ -288,7 +287,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Postingan postingan = new Postingan();
         if (cursor != null) {
             cursor.moveToFirst();
-            postingan.setId(Integer.parseInt(cursor.getString(0)));
+            postingan.setId(cursor.getInt(0));
             postingan.setKonten(cursor.getString(1));
             postingan.setUserId(cursor.getInt(2));
             User user = getUser(postingan.getUserId());
@@ -343,7 +342,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(KEY_UPDATED_AT, follower.getUpdatedAt());
             db.insert(TABLE_FOLLOWER, null, values);
         }
-        Log.d(LOG, "Add Follower ("+listFollower.size()+")");
         db.close();
     }
 

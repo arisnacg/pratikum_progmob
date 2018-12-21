@@ -31,7 +31,11 @@ import retrofit2.http.Query;
 public interface APIService {
     @POST("login")
     @FormUrlEncoded
-    Call<AuthRes> sendLoginReq(@Field("email") String email, @Field("password") String password);
+    Call<AuthRes> sendLoginReq(
+            @Field("email") String email,
+            @Field("password") String password,
+            @Field("firebase_token") String firebaseToken
+    );
 
     @POST("register")
     @FormUrlEncoded
@@ -39,7 +43,8 @@ public interface APIService {
             @Field("nama") String nama,
             @Field("email") String email,
             @Field("password") String password,
-            @Field("c_password") String confirmPassword
+            @Field("c_password") String confirmPassword,
+            @Field("firebase_token") String firebaseToken
     );
 
     @GET("user")

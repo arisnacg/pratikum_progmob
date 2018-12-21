@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "587744979270",
+    "firebase_url": "https://pratikum-e8945.firebaseio.com",
+    "project_id": "pratikum-e8945",
+    "storage_bucket": "pratikum-e8945.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587744979270:android:51307e00dc461390",
+        "android_client_info": {
+          "package_name": "com.example.gusarisna.pratikum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "587744979270-43ipcu9pmgmktbuvsl43dqomske72785.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gusarisna.pratikum",
+            "certificate_hash": "bd65a890bb02512f2fb7c819c3555787170821cb"
+          }
+        },
+        {
+          "client_id": "587744979270-p4vjkuscfp41e99d5is6lsb138bn0ikb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3Qtodr2eQVoNlZYucotD913d0P7OuM2s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "587744979270-p4vjkuscfp41e99d5is6lsb138bn0ikb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

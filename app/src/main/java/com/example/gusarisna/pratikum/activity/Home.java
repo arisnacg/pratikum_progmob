@@ -109,7 +109,7 @@ public class Home extends AppCompatActivity {
                 if(position == 0){
                     Home.this.setTitle("Profil");
                 } else if(position == 1) {
-                    Home.this.setTitle("Beranda");
+                    Home.this.setTitle("Timeline");
                 } else if(position == 2){
                     Home.this.setTitle("Pengguna");
                 } else {

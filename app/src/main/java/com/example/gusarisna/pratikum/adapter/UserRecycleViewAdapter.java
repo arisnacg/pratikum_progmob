@@ -67,7 +67,7 @@ public class UserRecycleViewAdapter extends RecyclerView.Adapter<UserRecycleView
         Glide.with(mContext)
             .load(url)
             .apply(new RequestOptions()
-                    .placeholder(R.mipmap.ic_launcher_round).centerCrop())
+                    .placeholder(R.mipmap.ic_user_round).centerCrop())
             .into(userViewHolder.ivFotoProfil);
         User curUser = listUser.get(i);
         if(curUser.getId() == user.getId()){
